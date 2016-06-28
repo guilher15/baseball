@@ -1,0 +1,225 @@
+<!doctype html>
+<style>
+  td {
+  font-size: 60%;
+  }
+</style>
+<html>
+  <head>
+    <script>
+    var draft = (pos)=>{
+	var elt = document.getElementsByClassName(t)[0];
+	elt.style = "display: none";
+    };
+    var mkHandler = (i) => {
+	return (ev) => {
+	    t = tds[i].className;
+	    if (t !== undefined && t.length > 0) {
+		draft(t);
+	    }
+        };
+    };
+    var tds;
+    window.onload = () => {
+        tds = document.getElementsByTagName("td");
+	for (var i=0; i < tds.length; ++i) {
+	    tds[i].onclick = mkHandler(i);
+	    tds[i].appendChild(document.createElement("img"));
+	    tds[i].appendChild(document.createElement("span"));
+	}
+    };
+
+function setImg(pos, url, name) {
+    var td = document.getElementsByClassName(pos)[0];
+    var img = td.firstChild;
+    var span = img.nextSibling;
+
+    img.src = url;
+    span.innerHTML = "<br />" + name;
+};
+
+var positions = [ "lf", "cf", "rf",
+		  "ss", "2b",
+		  "1b",
+		  "c",
+		  "3b"
+		];
+
+var normalize_position = (position) => {
+    if (position === "CATCHER") return "c";
+    if (position === "SHORTSTOP") return "ss";
+    return position.split(" ").map((s)=>s.substr(0,1)).join("").toLowerCase();
+}
+
+function changeTeam(event, team) {
+    var r = new XMLHttpRequest();
+
+    r.open("GET", "/" + event.target.value, true);
+    r.onreadystatechange = function () {
+        if (r.readyState != 4 || r.status != 200) {
+            return;
+	}
+
+	var lineup = JSON.parse(r.responseText);
+	var i, j;
+	for (i=j=0; i < positions.length; ++i) {
+	    while (normalize_position(lineup.names[j++]) !== positions[i]);
+	    setImg(positions[i] + " " + team, lineup.urls[j-1], lineup.players[j-1]);
+	}
+    };
+    r.send();
+};
+
+    </script>
+  </head>
+
+  <body>
+    <form>
+      <select onchange="changeTeam(event, 'a')">>
+	<option value="#" selected="selected">Visiting Team</option>
+	<option value="ari">Arizona Diamondbacks</option>
+	<option value="atl">Atlanta Braves</option>
+	<option value="bal">Baltimore Orioles</option>
+	<option value="bos">Boston Red Sox</option>
+	<option value="ana">California Angels</option>
+	<option value="chc">Chicago Cubs</option>
+	<option value="cws">Chicago White Sox</option>
+	<option value="cin">Cincinnati Reds</option>
+	<option value="cle">Cleveland Indians</option>
+	<option value="col">Colorado Rockies</option>
+	<option value="det">Detroit Tigers</option>
+	<option value="mia">Florida Marlins</option>
+	<option value="hou">Houston Astros</option>
+	<option value="kc">K.C. Royals</option>
+	<option value="la">L.A. Dodgers</option>
+	<option value="mil">Milwaukee Brewers</option>
+	<option value="min">Minnesota Twins</option>
+	<option value="nym">New York Mets</option>
+	<option value="nyy">New York Yankees</option>
+	<option value="oak">Oakland Athletics</option>
+	<option value="phi">Philadelphia Phillies</option>
+	<option value="pit">Pittsburgh Pirates</option>
+	<option value="stl">St. Louis Cardinals</option>
+	<option value="sd">San Diego Padres</option>
+	<option value="sf">S.F. Giants</option>
+	<option value="sea">Seattle Mariners</option>
+	<option value="tb">Tampa Bay Rays</option>
+	<option value="tex">Texas Rangers</option>
+	<option value="tor">Toronto Blue Jays</option>
+	<option value="was">Washington Nationals</option>
+      </select>
+
+      <select onchange="changeTeam(event, 'h')">
+	<option value="#" selected="selected">Home Team</option>
+	<option value="ari">Arizona Diamondbacks</option>
+	<option value="atl">Atlanta Braves</option>
+	<option value="bal">Baltimore Orioles</option>
+	<option value="bos">Boston Red Sox</option>
+	<option value="ana">California Angels</option>
+	<option value="chc">Chicago Cubs</option>
+	<option value="cws">Chicago White Sox</option>
+	<option value="cin">Cincinnati Reds</option>
+	<option value="cle">Cleveland Indians</option>
+	<option value="col">Colorado Rockies</option>
+	<option value="det">Detroit Tigers</option>
+	<option value="mia">Florida Marlins</option>
+	<option value="hou">Houston Astros</option>
+	<option value="kc">K.C. Royals</option>
+	<option value="la">L.A. Dodgers</option>
+	<option value="mil">Milwaukee Brewers</option>
+	<option value="min">Minnesota Twins</option>
+	<option value="nym">New York Mets</option>
+	<option value="nyy">New York Yankees</option>
+	<option value="oak">Oakland Athletics</option>
+	<option value="phi">Philadelphia Phillies</option>
+	<option value="pit">Pittsburgh Pirates</option>
+	<option value="stl">St. Louis Cardinals</option>
+	<option value="sd">San Diego Padres</option>
+	<option value="sf">S.F. Giants</option>
+	<option value="sea">Seattle Mariners</option>
+	<option value="tb">Tampa Bay Rays</option>
+	<option value="tex">Texas Rangers</option>
+	<option value="tor">Toronto Blue Jays</option>
+	<option value="was">Washington Nationals</option>
+      </select>
+    </form>
+
+    <table>
+      <tr>
+	<td></td>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="cf a"></td><td class="cf h"></td>
+	    </tr>
+	  </table>
+	</td>
+	<td></td>
+      </tr>
+
+      <tr>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="lf a"></td><td class="lf h"></td>
+	    </tr>
+	  </table>
+	</td>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="rf a"></td><td class="rf h"></td>
+	    </tr>
+	  </table>
+	</td>
+      </tr>
+
+      <tr>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="ss a"></td><td class="ss h"></td>
+	    </tr>
+	  </table>
+	</td>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="2b a"></td><td class="2b h"></td>
+	    </tr>
+	  </table>
+	</td>
+      </tr>
+
+      <tr>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="3b a"></td><td class="3b h"></td>
+	    </tr>
+	  </table>
+	</td>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="1b a"></td><td class="1b h"></td>
+	    </tr>
+	  </table>
+	</td>
+      </tr>
+
+      <tr>
+	<td></td>
+	<td colspan=2>
+	  <table style="border: 1px solid black">
+	    <tr>
+	      <td class="c a"></td><td class="c h"></td>
+	    </tr>
+	  </table>
+	</td>
+	<td></td>
+      </tr>
+
+    </table>
+  </body>
+</html>

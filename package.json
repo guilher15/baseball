@@ -1,0 +1,22 @@
+{
+    "name": "cherry-league",
+    "version": "1.0.0",
+    "description": "Fantasy baseball",
+    "repository" : {
+	"type" : "git",
+	"url" : "https://github.com/embeddedlinuxguy/cherry-league.git"
+    },
+    "dependencies": {
+	"cheerio": "^0.20.0",
+	"lodash": "^4.11.1"
+    },
+    "devDependencies": {},
+    "scripts": {
+	"test": "true"
+    },
+    "keywords": [
+	"baseball"
+    ],
+    "author": "",
+    "license": "ISC"
+}
